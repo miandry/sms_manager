@@ -37,6 +37,17 @@ router.afterEach((to) => {
   document.title = `${to.meta.title || 'SMS'} · ${site}`
 })
 
+// iOS Safari ignores user-scalable=no: block pinch and double-tap zoom by hand.
+const blockZoom = (e) => e.preventDefault()
+;['gesturestart', 'gesturechange', 'gestureend'].forEach((t) => document.addEventListener(t, blockZoom, { passive: false }))
+document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.preventDefault() }, { passive: false })
+let lastTouchEnd = 0
+document.addEventListener('touchend', (e) => {
+  const now = Date.now()
+  if (now - lastTouchEnd < 300) e.preventDefault()
+  lastTouchEnd = now
+}, { passive: false })
+
 document.addEventListener('DOMContentLoaded', () => {
   if (document.querySelector('#vue-app')) {
     createApp(App).use(router).mount('#vue-app')
