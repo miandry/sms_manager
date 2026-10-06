@@ -1,0 +1,11 @@
+name: 'SMS Merge'
+type: module
+description: 'Fusionne les SMS des lots JSON (json_sms) en contenus SMS (sms), par cron ou manuellement, sans doublon.'
+package: Custom
+core_version_requirement: ^9.5 || ^10 || ^11
+configure: sms_merge.form
+dependencies:
+  - drupal:node
+  - drupal:datetime
+  - drupal:options
+  - drupal:text

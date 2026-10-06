@@ -1,0 +1,3 @@
+cron_enabled: true
+cron_limit: 50
+allowed_senders: "MVola\nOrange Money"

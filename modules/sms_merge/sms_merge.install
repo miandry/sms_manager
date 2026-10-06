@@ -1,0 +1,111 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for SMS Merge.
+ */
+
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+
+/**
+ * Implements hook_schema().
+ */
+function sms_merge_schema() {
+  $schema['sms_merge_item'] = [
+    'description' => 'One row per merged SMS: its unique key prevents duplicates.',
+    'fields' => [
+      'hash' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE, 'description' => 'sha256(phone|date|sender|message)'],
+      'sms_nid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'source_nid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE, 'default' => 0],
+      'created' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+    ],
+    'primary key' => ['hash'],
+    'indexes' => ['sms_nid' => ['sms_nid'], 'source_nid' => ['source_nid']],
+  ];
+  $schema['sms_merge_source'] = [
+    'description' => 'Last merged state of each json_sms node.',
+    'fields' => [
+      'nid' => ['type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE],
+      'body_hash' => ['type' => 'varchar_ascii', 'length' => 64, 'not null' => TRUE, 'default' => ''],
+      'items' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      'processed' => ['type' => 'int', 'not null' => TRUE, 'default' => 0],
+      'error' => ['type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''],
+    ],
+    'primary key' => ['nid'],
+  ];
+  return $schema;
+}
+
+/**
+ * Implements hook_install().
+ */
+function sms_merge_install($is_syncing) {
+  if (!$is_syncing) {
+    _sms_merge_ensure_message_field();
+  }
+}
+
+/**
+ * Adds field_message (full SMS text) to the sms content type.
+ */
+function _sms_merge_ensure_message_field(): void {
+  if (!\Drupal::entityTypeManager()->getStorage('node_type')->load('sms')) {
+    return;
+  }
+  if (!FieldStorageConfig::loadByName('node', 'field_message')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_message',
+      'entity_type' => 'node',
+      'type' => 'string_long',
+      'cardinality' => 1,
+    ])->save();
+  }
+  if (!FieldConfig::loadByName('node', 'sms', 'field_message')) {
+    FieldConfig::create([
+      'field_name' => 'field_message',
+      'entity_type' => 'node',
+      'bundle' => 'sms',
+      'label' => 'Message',
+    ])->save();
+    /** @var \Drupal\Core\Entity\EntityDisplayRepositoryInterface $displays */
+    $displays = \Drupal::service('entity_display.repository');
+    $displays->getFormDisplay('node', 'sms')
+      ->setComponent('field_message', ['type' => 'string_textarea', 'weight' => 1])
+      ->save();
+    $displays->getViewDisplay('node', 'sms')
+      ->setComponent('field_message', ['type' => 'basic_string', 'label' => 'above', 'weight' => 1])
+      ->save();
+  }
+}
+
+/**
+ * Renames merged SMS to « Type - Ref ».
+ */
+function sms_merge_update_9001() {
+  $count = \Drupal::service('sms_merge.merger')->retitleMerged();
+  return t('@count SMS renommé(s) en « Type - Ref ».', ['@count' => $count]);
+}
+
+/**
+ * Removes anti-duplicate keys of SMS nodes that were deleted.
+ */
+function sms_merge_update_9002() {
+  $database = \Drupal::database();
+  $orphans = $database->query('SELECT i.hash FROM {sms_merge_item} i LEFT JOIN {node} n ON n.nid = i.sms_nid WHERE n.nid IS NULL')->fetchCol();
+  if ($orphans) {
+    $database->delete('sms_merge_item')->condition('hash', $orphans, 'IN')->execute();
+  }
+  return t('@count clé(s) de SMS supprimé(s) libérée(s).', ['@count' => count($orphans)]);
+}
+
+/**
+ * Adds the « Expéditeurs acceptés » setting (MVola, Orange Money).
+ */
+function sms_merge_update_9003() {
+  $config = \Drupal::configFactory()->getEditable('sms_merge.settings');
+  if ($config->get('allowed_senders') === NULL) {
+    $config->set('allowed_senders', "MVola\nOrange Money")->save();
+  }
+  return t('Expéditeurs acceptés : MVola, Orange Money.');
+}

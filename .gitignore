@@ -1,0 +1,35 @@
+# Drupal sites/default repository (modules, themes, config of the site).
+
+# ── Secrets & local environment ──────────────────────────────────────────
+# settings.php holds the database password and API keys
+# (mz_gemini_api_key, mz_claude_api_key, event_reminder_email_api_key…).
+settings.php
+settings.local.php
+services.local.yml
+*.sql
+*.sql.gz
+*.mysql.gz
+
+# ── Public files: uploads and generated assets ───────────────────────────
+# Aggregated CSS/JS, image styles, uploaded images are rebuilt or migrated,
+# never versioned. The .htaccess and the config sync directory are kept.
+files/*
+!files/.htaccess
+!files/config_*/
+private/
+tmp/
+
+# ── Node / Vue builds ────────────────────────────────────────────────────
+# Sources are versioned; dependencies are not. themes/*/dist IS versioned:
+# Drupal loads dist/app.js directly, the server does not run npm.
+node_modules/
+.vite/
+npm-debug.log*
+
+# ── Editors & OS ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.log

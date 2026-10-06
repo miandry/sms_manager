@@ -1,0 +1,20 @@
+<?php
+
+/**
+ * @file
+ * SMS Manager theme: Drupal shell for the Vue application.
+ */
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_preprocess_HOOK() for page templates.
+ */
+function sms_manager_preprocess_page(&$variables) {
+  $merge = \Drupal::service('router.route_provider')->getRoutesByNames(['sms_merge.form']);
+  $variables['#attached']['drupalSettings']['smsManager'] = [
+    'siteName' => \Drupal::config('system.site')->get('name'),
+    'mergeUrl' => $merge ? Url::fromRoute('sms_merge.form')->toString() : NULL,
+  ];
+  $variables['#cache']['contexts'][] = 'user.permissions';
+}

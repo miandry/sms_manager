@@ -1,0 +1,13 @@
+sms_merge.settings:
+  type: config_object
+  label: 'SMS Merge settings'
+  mapping:
+    cron_enabled:
+      type: boolean
+      label: 'Fusion automatique par cron'
+    cron_limit:
+      type: integer
+      label: 'Lots json_sms traités par passage de cron'
+    allowed_senders:
+      type: string
+      label: 'Expéditeurs acceptés (un par ligne, vide = tous)'

@@ -1,0 +1,18 @@
+services:
+  logger.channel.sms_merge:
+    parent: logger.channel_base
+    arguments: ['sms_merge']
+
+  sms_merge.parser:
+    class: Drupal\sms_merge\SmsParser
+
+  sms_merge.merger:
+    class: Drupal\sms_merge\SmsMerger
+    arguments:
+      - '@entity_type.manager'
+      - '@database'
+      - '@sms_merge.parser'
+      - '@config.factory'
+      - '@state'
+      - '@datetime.time'
+      - '@logger.channel.sms_merge'

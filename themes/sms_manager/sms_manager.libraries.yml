@@ -1,0 +1,10 @@
+global:
+  js:
+    dist/app.js: { attributes: { type: module } }
+  css:
+    theme:
+      css/style.css: {}
+      dist/assets/main.css: {}
+  dependencies:
+    - core/drupal
+    - core/drupalSettings

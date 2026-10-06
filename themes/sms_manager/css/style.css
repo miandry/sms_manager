@@ -1,0 +1,30 @@
+html, body {
+  margin: 0;
+  background: #f4f6fb;
+  color: #1f2937;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+}
+
+/* Non-front Drupal pages (login, password reset…). */
+.drupal-page {
+  max-width: 480px;
+  margin: 48px auto;
+  padding: 28px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgb(15 23 42 / 8%);
+}
+.drupal-page__home { display: inline-block; margin-bottom: 16px; font-weight: 700; color: #312e81; text-decoration: none; }
+.drupal-page input[type='text'],
+.drupal-page input[type='password'],
+.drupal-page input[type='email'] { width: 100%; padding: 9px 12px; border: 1px solid #e5e7eb; border-radius: 10px; box-sizing: border-box; }
+.drupal-page .form-item { margin-bottom: 14px; }
+.drupal-page .description { color: #6b7280; font-size: 0.8rem; }
+.drupal-page input[type='submit'] { background: #4f46e5; color: #fff; border: 0; border-radius: 999px; padding: 9px 18px; font-weight: 600; cursor: pointer; }
+
+/* Drupal wrappers must not constrain the Vue layout. */
+.dialog-off-canvas-main-canvas,
+#page-wrapper,
+#page-wrapper > main {
+  min-height: 100vh;
+}

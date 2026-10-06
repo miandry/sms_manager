@@ -1,0 +1,4 @@
+administer sms merge:
+  title: 'Fusionner les SMS JSON'
+  description: 'Lancer la fusion json_sms → sms et régler le cron.'
+  restrict access: true

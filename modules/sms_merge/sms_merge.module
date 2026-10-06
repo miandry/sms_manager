@@ -1,0 +1,44 @@
+<?php
+
+/**
+ * @file
+ * Merges json_sms batches into sms nodes.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\node\NodeInterface;
+use Drupal\sms_merge\SmsMerger;
+
+/**
+ * Implements hook_help().
+ */
+function sms_merge_help($route_name, RouteMatchInterface $route_match) {
+  if ($route_name === 'sms_merge.form') {
+    return '<p>' . t('Chaque contenu <em>json_sms</em> contient une liste JSON de SMS. La fusion crée un contenu <em>sms</em> par SMS nouveau ; un SMS déjà fusionné (même téléphone, date, expéditeur et message) n’est jamais recréé. Le cron ne relit que les lots nouveaux ou modifiés.') . '</p>';
+  }
+}
+
+/**
+ * Implements hook_cron().
+ */
+function sms_merge_cron() {
+  $config = \Drupal::config('sms_merge.settings');
+  if (!$config->get('cron_enabled')) {
+    return;
+  }
+  /** @var \Drupal\sms_merge\SmsMerger $merger */
+  $merger = \Drupal::service('sms_merge.merger');
+  $merger->mergeAll((int) ($config->get('cron_limit') ?: 50));
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_delete() for node.
+ *
+ * Frees the anti-duplicate key of a deleted SMS so that a manual re-scan
+ * (« Relire aussi les lots déjà fusionnés ») can create it again.
+ */
+function sms_merge_node_delete(NodeInterface $node) {
+  if ($node->bundle() === SmsMerger::TARGET_BUNDLE) {
+    \Drupal::database()->delete('sms_merge_item')->condition('sms_nid', $node->id())->execute();
+  }
+}

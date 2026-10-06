@@ -1,0 +1,10 @@
+name: 'SMS Manager'
+type: theme
+description: 'Thème Drupal + Vue 3 / Vite pour consulter les SMS (sms) et les lots JSON (json_sms).'
+core_version_requirement: ^9.5 || ^10 || ^11
+base theme: false
+package: Custom
+libraries:
+  - sms_manager/global
+regions:
+  content: Content

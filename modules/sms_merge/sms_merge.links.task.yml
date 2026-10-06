@@ -1,0 +1,5 @@
+sms_merge.form:
+  title: 'Fusion SMS'
+  route_name: sms_merge.form
+  base_route: system.admin_content
+  weight: 20

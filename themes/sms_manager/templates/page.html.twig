@@ -1,0 +1,20 @@
+{#
+/**
+ * @file
+ * Home page = the Vue application (vue-app/src, built into dist/).
+ * Other front-end pages (/user/login, /user/password…) keep Drupal content.
+ */
+#}
+<div id="page-wrapper">
+  <main>
+    {% if is_front %}
+      <div id="vue-app"></div>
+    {% else %}
+      <div class="drupal-page">
+        <a class="drupal-page__home" href="{{ path('<front>') }}">✉ SMS Manager</a>
+        {{ page.highlighted }}
+        {{ page.content }}
+      </div>
+    {% endif %}
+  </main>
+</div>

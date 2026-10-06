@@ -1,0 +1,7 @@
+sms_merge.form:
+  path: '/admin/content/sms-merge'
+  defaults:
+    _form: '\Drupal\sms_merge\Form\MergeForm'
+    _title: 'Fusion des SMS'
+  requirements:
+    _permission: 'administer sms merge'
