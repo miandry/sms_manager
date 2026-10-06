@@ -105,7 +105,7 @@ async function load() {
   loading.value = true
   error.value = ''
   try {
-    const res = await listNodes('sms', { page: page.value, limit: LIMIT, filters: filters(), fields: SMS_FIELDS.filter((f) => f !== 'field_message') })
+    const res = await listNodes('sms', { page: page.value, limit: LIMIT, sort: 'nid', order: 'DESC', filters: filters(), fields: SMS_FIELDS.filter((f) => f !== 'field_message') })
     rows.value = res.rows
     total.value = res.total
   } catch (err) {

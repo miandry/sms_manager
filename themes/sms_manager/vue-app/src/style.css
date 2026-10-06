@@ -79,6 +79,21 @@ label { font-size: 0.72rem; font-weight: 600; color: var(--muted); display: bloc
 .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 16px 0 10px; }
 .section-head h2 { margin: 0; }
 
+/* Lots / merge notifications */
+.nav-lots { display: flex; align-items: center; justify-content: space-between; }
+.nav-badge { background: #f59e0b; color: #fff; border-radius: 999px; font-size: 0.68rem; min-width: 20px; padding: 1px 6px; text-align: center; }
+.pending-pill { margin-left: auto; background: #fef3c7; color: #92400e; border-radius: 999px; padding: 3px 10px; font-size: 0.72rem; font-weight: 700; white-space: nowrap; }
+.notice { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; border-radius: 10px; padding: 9px 12px; margin-bottom: 10px; font-size: 0.8rem; }
+.notice.ok { background: #d1fae5; color: #065f46; }
+.notice.warn { background: #fef3c7; color: #92400e; }
+.notice.err { background: #ffe4e6; color: #9f1239; }
+.notice-close { background: none; border: 0; font-size: 1.1rem; line-height: 1; cursor: pointer; color: inherit; padding: 0; }
+.lot-row.pending { background: #fffbeb; }
+.tag { font-size: 0.62rem; font-weight: 700; border-radius: 999px; padding: 1px 7px; }
+.tag.ok { background: #d1fae5; color: var(--credit); }
+.tag.warn { background: #fef3c7; color: #92400e; }
+.tag.err { background: #ffe4e6; color: var(--debit); }
+
 .list { padding: 0; overflow: hidden; }
 .list.loading { opacity: 0.5; }
 .sms-row, .lot-row {

@@ -5,3 +5,24 @@ sms_merge.form:
     _title: 'Fusion des SMS'
   requirements:
     _permission: 'administer sms merge'
+
+# Token auth (api_solutions) is checked in the controller.
+sms_merge.api.status:
+  path: '/sms-merge/api/status'
+  defaults:
+    _controller: '\Drupal\sms_merge\Controller\MergeApiController::status'
+  methods: [GET]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
+
+sms_merge.api.run:
+  path: '/sms-merge/api/run'
+  defaults:
+    _controller: '\Drupal\sms_merge\Controller\MergeApiController::run'
+  methods: [POST]
+  requirements:
+    _access: 'TRUE'
+  options:
+    no_cache: TRUE
